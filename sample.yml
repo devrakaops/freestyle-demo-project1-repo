@@ -1,0 +1,11 @@
+---
+- name: "Playbook"
+  hosts: webservers
+  tasks:
+    -   name: "Create a directory on webservers MH"
+        file:
+            path: /root/albela
+            state: directory
+
+
+    
