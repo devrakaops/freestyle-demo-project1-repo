@@ -1,7 +1,6 @@
 ---
 - name: Playbook to setup webserver
   hosts: webservers        # or your target host/group
-  become: true
 
   tasks:
     - name: "Task-1: Install webserver and firewall packages"
@@ -27,10 +26,5 @@
         immediate: yes
         state: enabled
 
-    - name: "Task-4: Copy website content to the managed server"
-      ansible.builtin.copy:
-        src: /root/ansible/
-        dest: /var/www/html/
-        owner: apache
-        group: apache
-        mode: "0644"
+
+        
