@@ -1,7 +1,7 @@
 --- 
 - name: Playbook to setup webserver
   ignore_errors: yes
-  hosts: webservers        # or your target host/group
+  hosts: webservers        # or your target host/groupp
 
 
   tasks:
