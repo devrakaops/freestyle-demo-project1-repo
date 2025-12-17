@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Stage-1: pulling the feat/ansible branch data in workspace') {
+            steps {
+                git branch: 'feat/ansible', url: 'https://github.com/devrakaops/freestyle-demo-project1-repo.git'
+            }
+        }
+        stage('Stage-2: rsync ansible data to ansible server') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Jenkins-server-root-account', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'rsync -avz /var/lib/jenkins/workspace/declarative/* root@3.7.254.7:/root/ansible/', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+            }
+        }
+        stage('Stage-3: Running ansible playbook to setup webserver on web machine') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Ansible-Server-Root-Account', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''ansible-playbook /root/ansible/websetup.yml''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
+        }
+        stage('Stage-4: Fetching the main branch index.html file') {
+            steps {
+                git branch: 'main', url: 'https://github.com/devrakaops/freestyle-demo-project1-repo.git'
+            }
+        }
+        stage('Stage-5: rsync index.html file to webserver /var/www/html') {
+            steps {
+                sshPublisher(publishers: [sshPublisherDesc(configName: 'Jenkins-server-root-account', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: 'rsync -avz /var/lib/jenkins/workspace/declarative/index.html root@13.127.37.79:/var/www/html', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: '', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: true)])
+            }
+        }
+    }
+}
