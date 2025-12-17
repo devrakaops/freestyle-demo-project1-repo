@@ -1,0 +1,23 @@
+--- 
+- name: Playbook to setup webserver
+  ignore_errors: yes
+  hosts: webservers        # or your target host/group
+
+
+  tasks:
+    - name: "Task-1: Install webserver and firewall packages"
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: "Task-2: Start and enable services"
+      ansible.builtin.service:
+        name: httpd
+        state: started        # use "started" for idempotence
+        enabled: true
+
+
+  
+
+
+        
